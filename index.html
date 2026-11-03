@@ -23,7 +23,7 @@ nav button{flex:1;border:0;background:none;padding:9px 2px 12px;font-size:11.5px
 .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}.card.danger{border-color:#e9c1be;background:#fdf6f5}.card.ok{border-color:#bfe0de;background:#f1f9f8}
 .sub{color:var(--muted);font-size:14px;margin:4px 0 12px}.lead{font-size:16.5px;margin:6px 0 10px}.ttl{font-size:30px;margin:4px 0}
 label{display:block;font-weight:700;font-size:14px;margin:10px 0 4px}
-input[type=text],textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;font-family:inherit;font-size:15.5px;background:#fff;color:var(--navy)}
+input[type=text],input[type=tel],textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;font-family:inherit;font-size:15.5px;background:#fff;color:var(--navy)}
 .codein{text-transform:uppercase;letter-spacing:.1em;text-align:center;font-size:18px!important}
 .btn{display:block;width:100%;background:var(--teal);color:#fff;border:0;border-radius:12px;padding:13px;font-size:15.5px;font-weight:700;text-align:center;text-decoration:none;margin-top:10px}.btn.alt{background:#fff;color:var(--navy);border:1px solid var(--line)}.btn.red{background:var(--red)}
 .mini{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 11px;font-size:13px;color:var(--navy);margin-bottom:10px}.mini.danger{color:var(--red);border-color:#e9c1be}
@@ -62,7 +62,7 @@ details.modcard{background:#fff;border:1px solid var(--line);border-left:4px sol
 .ptop button{background:none;border:1px solid currentColor;color:inherit;border-radius:8px;padding:6px 10px;opacity:.8}
 .prog{display:flex;gap:4px;padding:0 18px}.prog i{flex:1;height:4px;border-radius:2px;background:rgba(127,127,127,.25)}.prog i.on{background:var(--teal)}.dark .prog i.on{background:#5fc1bd}
 .pbody{flex:1;overflow-y:auto;padding:16px 22px;max-width:560px;width:100%;margin:0 auto}.pbody h2{font-size:30px;margin:6px 0 10px}.pbody p{opacity:.9}
-.pbody textarea,.pbody input[type=text]{font-size:16px}.dark .pbody textarea,.dark .pbody input{background:#1d3a4b;border-color:#2f5163;color:#fff}
+.pbody textarea,.pbody input[type=text],input[type=tel]{font-size:16px}.dark .pbody textarea,.dark .pbody input{background:#1d3a4b;border-color:#2f5163;color:#fff}
 .pnav{display:flex;gap:10px;padding:12px 18px;max-width:560px;width:100%;margin:0 auto}.pnav button{flex:1;padding:14px;border-radius:12px;font-weight:700;font-size:15.5px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit}.pnav .go{background:var(--teal);border-color:var(--teal);color:#fff}.pnav .go:disabled{opacity:.35}
 .pfoot{padding:10px 18px 16px;border-top:1px solid #2f5163;text-align:center;font-size:12px;color:#aab8bf}.pfoot a{display:block;background:var(--red);color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:12px;margin-bottom:6px;font-size:16px}
 .pb{display:block;width:100%;text-align:left;background:#1d3a4b;border:1px solid #2f5163;color:var(--cream);border-radius:14px;padding:15px;margin:9px 0;font-size:14.5px;text-decoration:none}.pb b{display:block;font-size:16.5px}.pb.red{background:var(--red);border-color:var(--red)}
@@ -84,7 +84,7 @@ details.modcard{background:#fff;border:1px solid var(--line);border-left:4px sol
 .addl{display:grid;grid-template-columns:130px 1fr 44px;gap:6px}.addl button{border:0;border-radius:10px;background:var(--teal);color:#fff;font-size:20px;font-weight:700}
 .delta{display:flex;align-items:center;justify-content:center;gap:18px;margin:18px 0}.delta b{font-family:'Cormorant Garamond',serif;font-size:56px}.delta span{font-size:28px;opacity:.6}
 @media(max-width:520px){.drow{grid-template-columns:96px 1fr}.yn{margin-left:104px}.dots button{height:36px;font-size:14px}}
-</style>
+.qc{display:grid;gap:8px;margin:10px 0 14px}.qb{display:block;text-decoration:none;border-radius:14px;padding:12px 14px;border:1px solid var(--line);background:#fff;color:var(--navy)}.qb b{display:block;font-size:16px}.qb span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}.qb.call{background:var(--teal);color:#fff;border-color:var(--teal)}.qb.call span{color:#dff1ef}.qb.wa{border-color:#25D366}.player.dark .qb{background:#1d3a4a;color:#fff;border-color:#2c5266}.player.dark .qb span{color:#b9cbd4}.player.dark .qb.call{background:var(--teal)}</style>
 </head>
 <body>
 <header><div><small>Centro Bravo Ibarra · basado en DBT</small><b>Kit de Habilidades</b></div><button class="cbtn" data-crisis id="hdrC">Crisis</button></header>
@@ -798,10 +798,18 @@ function onAct(){bind();$('#go').onclick=async()=>{const c=$('#code').value.trim
  if(!CODE_HASHES.includes(await sha('kitdbt:'+c))){$('#err').textContent='Código no válido. Revíselo en el correo de su compra.';return}
  DB.act=true;DB.code=c;if(c==='DEMO')seedDemo();save();UI.tab='cfg';UI.sub='first';render()};$('#code').oninput=()=>$('#err').textContent=''}
 
+/* ---------- Contactos rápidos ---------- */
+function telNum(v){let d=(v||'').replace(/\D/g,'');if(d.length===9&&d[0]==='9')d='56'+d;if(d.length===8)d='569'+d;return d}
+function quickContacts(dark){const c=DB.cfg||{},ct=telNum(c.ctel),tw=telNum(c.wsp);if(!ct&&!tw)return DB.act?`<p class="${dark?'small':'sub'}" style="margin:6px 0 12px">Agregue en ⚙ Ajustes el teléfono de una persona de confianza y el WhatsApp de su terapeuta para llamarles desde aquí con un toque.</p>`:'';
+ const cn=esc(c.confianza||'mi persona de confianza'),tn=esc(c.terapeuta||'mi terapeuta');
+ const mC=encodeURIComponent('Hola, estoy pasando un momento difícil. ¿Puedes llamarme o acompañarme?');
+ const mT=encodeURIComponent('Hola'+(c.terapeuta?' '+c.terapeuta:'')+', estoy pasando un momento difícil y quisiera hablar con usted.');
+ return `<div class="qc">${ct?`<a class="qb call" href="tel:+${ct}"><b>📞 Llamar a ${cn}</b><span>Persona de confianza</span></a><a class="qb wa" target="_blank" href="https://wa.me/${ct}?text=${mC}"><b>💬 WhatsApp a ${cn}</b><span>Mensaje listo para enviar</span></a>`:''}${tw?`<a class="qb wa" target="_blank" href="https://wa.me/${tw}?text=${mT}"><b>💬 WhatsApp a ${tn}</b><span>Su terapeuta puede no responder de inmediato</span></a>`:''}</div>`}
 /* ---------- Inicio ---------- */
 function vInicio(){const d=DB.diary[today()],hasPlan=DB.plan.contactos||DB.plan.propias;const done7=[...Array(7)].filter((_,i)=>DB.diary[dshift(today(),-i)]).length;
  return `<div class="hi"><h2>Hola${DB.cfg.nombre?', '+esc(DB.cfg.nombre.split(' ')[0]):''}</h2><button class="mini" data-go="cfg">⚙ Ajustes</button></div>
  <button class="sos" data-crisis><b>Necesito ayuda ahora</b><span>Opciones para momentos de crisis</span></button>
+ ${quickContacts(false)}
  <div class="card"><h3>¿Cómo está ahora?</h3><p class="sub">Elija lo que más se acerca y le sugiero qué practicar.</p><div class="chips big" id="ck">${CHECK_EMO.map(e=>`<button class="chip" data-ck="${e}">${e}</button>`).join('')}</div><div id="ckr"></div></div>
  <div class="grid2">
   <button class="tile" data-go="reg"><b>${d?'✓ Registro de hoy':'Registro de hoy'}</b><span>${d?'Listo. Puede editarlo.':'2 minutos al final del día'}</span><i class="pill">${done7}/7 días</i></button>
@@ -866,12 +874,14 @@ vPlan.on=()=>{$('#sp').onclick=()=>{$$('[data-plan]').forEach(t=>DB.plan[t.datas
 function vCfg(){const c=DB.cfg,first=UI.sub==='first';return `${first?'<div class="card ok"><b>✓ Kit activado.</b> Complete estos datos para personalizarlo.</div>':'<button class="mini" data-go="inicio">← Inicio</button>'}
  <div class="card"><h2>Ajustes</h2><label>Su nombre (aparece en el reporte)</label><input type="text" id="cn" value="${esc(c.nombre)}">
  <label>Nombre de su terapeuta</label><input type="text" id="ct" value="${esc(c.terapeuta)}" placeholder="Opcional">
- <label>WhatsApp de su terapeuta</label><input type="text" id="cw" value="${esc(c.wsp)}" placeholder="+56 9 …  (para enviarle el reporte)">
+ <label>WhatsApp de su terapeuta</label><input type="tel" id="cw" value="${esc(c.wsp)}" placeholder="+56 9 …  (reporte y contacto en crisis)">
+ <label>Persona de confianza (familiar o amistad)</label><input type="text" id="cfn" value="${esc(c.confianza||'')}" placeholder="Nombre">
+ <label>Teléfono de su persona de confianza</label><input type="tel" id="cft" value="${esc(c.ctel||'')}" placeholder="+56 9 …">
  <label>Impulsos o conductas que quiere registrar (una por línea)</label><textarea id="cti" rows="3">${esc(DB.targets.join('\n'))}</textarea>
  <p class="sub">Ideal definirlas con su terapeuta. Si alguna se refiere a hacerse daño, el kit le ofrecerá ayuda cuando el impulso esté alto.</p>
  <button class="btn" id="cs">Guardar</button></div>
  ${first?'':`<div class="card"><h3>Este dispositivo</h3><p class="sub">Sus datos se guardan solo en este dispositivo, no en internet.</p><button class="mini danger" id="wipe">Borrar todos mis datos</button></div>`}`}
-vCfg.on=()=>{$('#cs').onclick=()=>{DB.cfg={nombre:$('#cn').value.trim(),terapeuta:$('#ct').value.trim(),wsp:$('#cw').value.trim()};DB.targets=$('#cti').value.split('\n').map(s=>s.trim()).filter(Boolean);save();toast('Guardado');UI.tab=UI.sub==='first'?'plan':'inicio';UI.sub=null;render()};
+vCfg.on=()=>{$('#cs').onclick=()=>{DB.cfg={nombre:$('#cn').value.trim(),terapeuta:$('#ct').value.trim(),wsp:$('#cw').value.trim(),confianza:$('#cfn').value.trim(),ctel:$('#cft').value.trim()};DB.targets=$('#cti').value.split('\n').map(s=>s.trim()).filter(Boolean);save();toast('Guardado');UI.tab=UI.sub==='first'?'plan':'inicio';UI.sub=null;render()};
  const w=$('#wipe');if(w)w.onclick=()=>{if(w.dataset.c){try{localStorage.removeItem('kitdbt_pac_v3')}catch(e){}location.reload()}else{w.dataset.c=1;w.textContent='Confirmar: borrar todo'}}};
 
 /* ================= REPORTE PDF ================= */
@@ -948,7 +958,7 @@ async function makePdf(){const btn=$('#mk');btn.textContent='Generando…';
 
 /* ================= CRISIS ================= */
 function openCrisisMenu(){const P=$('#player');P.className='player on dark';
- P.innerHTML=`<div class="ptop"><span>Ayuda de crisis</span><button id="px">✕ Cerrar</button></div><div class="pbody"><h2>¿Qué está pasando?</h2><p>Elija lo que más se parece. Le acompaño paso a paso.</p>
+ P.innerHTML=`<div class="ptop"><span>Ayuda de crisis</span><button id="px">✕ Cerrar</button></div><div class="pbody">${quickContacts(true)}<h2>¿Qué está pasando?</h2><p>Elija lo que más se parece. Le acompaño paso a paso.</p>
  ${Object.entries(EX).filter(([,x])=>x.crisis).map(([id,x])=>`<button class="pb ${x.red?'red':''}" data-cx="${id}"><b>${x.n}</b>${x.s}</button>`).join('')}
  <p class="small">Esta herramienta no avisa a nadie ni se revisa en tiempo real.</p></div>
  <div class="pfoot"><a href="tel:*4141">Llamar *4141</a>Línea de Prevención del Suicidio · gratuita · 24/7 · 131 SAMU</div>`;
