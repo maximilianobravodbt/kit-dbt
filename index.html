@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#112A38">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kit de Habilidades basado en DBT · Centro Bravo Ibarra</title><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="icon" href="/icon-192.png"><meta name="apple-mobile-web-app-title" content="Kit DBT"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="robots" content="noindex">
+<title>Kit de Habilidades basado en DBT · Centro Bravo Ibarra</title><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="icon" href="/icon-192.png"><meta name="apple-mobile-web-app-title" content="Kit DBT"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="robots" content="noindex"><style>#inst{display:none;align-items:center;gap:10px;background:#A17844;color:#fff;padding:10px 14px;font:500 14px "DM Sans",sans-serif}#inst.on{display:flex}#inst span{flex:1}#inst button{border:0;border-radius:10px;padding:8px 12px;font:700 14px "DM Sans",sans-serif;cursor:pointer}#inst .go{background:#fff;color:#112A38}#inst .x{background:transparent;color:#fff;padding:8px}#instm{display:none;position:fixed;inset:0;background:rgba(17,42,56,.6);z-index:99;align-items:flex-end;justify-content:center}#instm.on{display:flex}#instm div{background:#FCFAF5;color:#112A38;border-radius:18px 18px 0 0;padding:22px;max-width:520px;width:100%;font:15px/1.5 "DM Sans",sans-serif}#instm h3{margin:0 0 8px;font-family:"Cormorant Garamond",serif;font-size:24px}#instm button{margin-top:14px;width:100%;border:0;border-radius:12px;padding:12px;background:#1E7E7C;color:#fff;font-weight:700;font-size:15px}</style>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#112A38;--teal:#1E7E7C;--gold:#A17844;--cream:#FCFAF5;--line:#e6e0d4;--muted:#5f6b73;--red:#b3403a}
@@ -87,7 +87,7 @@ details.modcard{background:#fff;border:1px solid var(--line);border-left:4px sol
 .qc{display:grid;gap:8px;margin:10px 0 14px}.qb{display:block;text-decoration:none;border-radius:14px;padding:12px 14px;border:1px solid var(--line);background:#fff;color:var(--navy)}.qb b{display:block;font-size:16px}.qb span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}.qb.call{background:var(--teal);color:#fff;border-color:var(--teal)}.qb.call span{color:#dff1ef}.qb.wa{border-color:#25D366}.player.dark .qb{background:#1d3a4a;color:#fff;border-color:#2c5266}.player.dark .qb span{color:#b9cbd4}.player.dark .qb.call{background:var(--teal)}</style>
 </head>
 <body>
-<header><div><small>Centro Bravo Ibarra · basado en DBT</small><b>Kit de Habilidades</b></div><button class="cbtn" data-crisis id="hdrC">Crisis</button></header>
+<div id="inst"><span>Instale el Kit como app en este dispositivo</span><button class="go" id="instgo">📲 Instalar</button><button class="x" id="instx" aria-label="Cerrar">✕</button></div><div id="instm"><div id="instmc"></div></div><header><div><small>Centro Bravo Ibarra · basado en DBT</small><b>Kit de Habilidades</b></div><button class="cbtn" data-crisis id="hdrC">Crisis</button></header>
 <div class="wrap" id="app"></div>
 <nav id="nav" hidden></nav>
 <div class="player" id="player"></div>
@@ -1035,5 +1035,12 @@ render();if(location.hash==='#crisis')openCrisisMenu();window.addEventListener('
 
 document.getElementById('hdrC').onclick=openCrisisMenu;
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{})}</script></body>
+<script>(function(){var st=matchMedia('(display-mode: standalone)').matches||navigator.standalone;var ua=navigator.userAgent;var ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&'ontouchend' in document);var bar=document.getElementById('inst'),m=document.getElementById('instm'),mc=document.getElementById('instmc');var dis=false;try{dis=localStorage.getItem('kit_inst_x')==='1'}catch(e){}
+function show(){if(!st&&!dis)bar.classList.add('on')}
+function help(html){mc.innerHTML=html+'<button id="instok">Entendido</button>';m.classList.add('on');document.getElementById('instok').onclick=function(){m.classList.remove('on')}}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window._bip=e;show()});
+window.addEventListener('appinstalled',function(){bar.classList.remove('on')});
+if(ios)show();else setTimeout(function(){if(!window._bip)show()},2500);
+document.getElementById('instx').onclick=function(){bar.classList.remove('on');try{localStorage.setItem('kit_inst_x','1')}catch(e){}};
+document.getElementById('instgo').onclick=function(){if(window._bip){window._bip.prompt();window._bip.userChoice.then(function(r){if(r.outcome==='accepted')bar.classList.remove('on');window._bip=null})}else if(ios){help('<h3>Instalar en iPhone o iPad</h3>1. Abra esta página en <b>Safari</b>.<br>2. Toque el botón <b>Compartir</b> (cuadrado con flecha hacia arriba).<br>3. Elija <b>"Agregar a pantalla de inicio"</b> y luego <b>Agregar</b>.<br><br>El Kit quedará con su ícono, como una app.')}else{help('<h3>Instalar la app</h3><b>En computador (Chrome o Edge):</b> menú <b>⋮</b> arriba a la derecha → <b>"Transmitir, guardar y compartir"</b> → <b>"Instalar página como app"</b>.<br><br><b>En Android (Chrome):</b> menú <b>⋮</b> → <b>"Agregar a la pantalla principal"</b> o <b>"Instalar app"</b>.')}};})();</script><script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{})}</script></body>
 </html>
