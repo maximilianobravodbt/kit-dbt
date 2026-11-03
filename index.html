@@ -84,7 +84,7 @@ details.modcard{background:#fff;border:1px solid var(--line);border-left:4px sol
 .addl{display:grid;grid-template-columns:130px 1fr 44px;gap:6px}.addl button{border:0;border-radius:10px;background:var(--teal);color:#fff;font-size:20px;font-weight:700}
 .delta{display:flex;align-items:center;justify-content:center;gap:18px;margin:18px 0}.delta b{font-family:'Cormorant Garamond',serif;font-size:56px}.delta span{font-size:28px;opacity:.6}
 @media(max-width:520px){.drow{grid-template-columns:96px 1fr}.yn{margin-left:104px}.dots button{height:36px;font-size:14px}}
-.qc{display:grid;gap:8px;margin:10px 0 14px}.qb{display:block;text-decoration:none;border-radius:14px;padding:12px 14px;border:1px solid var(--line);background:#fff;color:var(--navy)}.qb b{display:block;font-size:16px}.qb span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}.qb.call{background:var(--teal);color:#fff;border-color:var(--teal)}.qb.call span{color:#dff1ef}.qb.wa{border-color:#25D366}.player.dark .qb{background:#1d3a4a;color:#fff;border-color:#2c5266}.player.dark .qb span{color:#b9cbd4}.player.dark .qb.call{background:var(--teal)}</style>
+.qc{display:grid;gap:8px;margin:10px 0 14px}.qb{display:block;width:100%;text-align:left;font:inherit;cursor:pointer;text-decoration:none;border-radius:14px;padding:12px 14px;border:1px solid var(--line);background:#fff;color:var(--navy)}.qb b{display:block;font-size:16px}.qb span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}.qb.call{background:var(--teal);color:#fff;border-color:var(--teal)}.qb.call span{color:#dff1ef}.qb.wa{border-color:#25D366}.player.dark .qb{background:#1d3a4a;color:#fff;border-color:#2c5266}.player.dark .qb span{color:#b9cbd4}.player.dark .qb.call{background:var(--teal)}</style>
 </head>
 <body>
 <div id="inst"><span>Instale el Kit como app en este dispositivo</span><button class="go" id="instgo">📲 Instalar</button><button class="x" id="instx" aria-label="Cerrar">✕</button></div><div id="instm"><div id="instmc"></div></div><header><div><small>Centro Bravo Ibarra · basado en DBT</small><b>Kit de Habilidades</b></div><button class="cbtn" data-crisis id="hdrC">Crisis</button></header>
@@ -780,7 +780,7 @@ function render(){window.scrollTo(0,0);
  const V={inicio:vInicio,reg:vReg,prac:vPrac,apr:vApr,rep:vRep,plan:vPlan,cfg:vCfg}[UI.tab];$('#app').innerHTML=V();bind();(V.on||(()=>{}))();
 }
 function bind(){
- $$('[data-crisis]').forEach(b=>b.onclick=openCrisisMenu);
+ $$('[data-crisis]').forEach(b=>b.onclick=openCrisisMenu);$$('[data-qcfg]').forEach(b=>b.onclick=()=>{if($('#player').className.includes('on'))closePlayer();UI.tab='cfg';UI.sub=null;render();scrollTo(0,0)});
  $$('[data-ex]').forEach(b=>b.onclick=()=>startEx(b.dataset.ex));
  $$('[data-go]').forEach(b=>b.onclick=()=>{UI.tab=b.dataset.go;UI.sub=b.dataset.sub||null;render()});
  $$('[data-skill]').forEach(b=>b.onclick=()=>{UI.tab='apr';UI.sub=b.dataset.skill;render()});
@@ -800,11 +800,11 @@ function onAct(){bind();$('#go').onclick=async()=>{const c=$('#code').value.trim
 
 /* ---------- Contactos rápidos ---------- */
 function telNum(v){let d=(v||'').replace(/\D/g,'');if(d.length===9&&d[0]==='9')d='56'+d;if(d.length===8)d='569'+d;return d}
-function quickContacts(dark){const c=DB.cfg||{},ct=telNum(c.ctel),tw=telNum(c.wsp);if(!ct&&!tw)return DB.act?`<p class="${dark?'small':'sub'}" style="margin:6px 0 12px">Agregue en ⚙ Ajustes el teléfono de una persona de confianza y el WhatsApp de su terapeuta para llamarles desde aquí con un toque.</p>`:'';
+function quickContacts(dark){const c=DB.cfg||{},ct=telNum(c.ctel),tw=telNum(c.wsp);if(!DB.act)return'';
  const cn=esc(c.confianza||'mi persona de confianza'),tn=esc(c.terapeuta||'mi terapeuta');
  const mC=encodeURIComponent('Hola, estoy pasando un momento difícil. ¿Puedes llamarme o acompañarme?');
  const mT=encodeURIComponent('Hola'+(c.terapeuta?' '+c.terapeuta:'')+', estoy pasando un momento difícil y quisiera hablar con usted.');
- return `<div class="qc">${ct?`<a class="qb call" href="tel:+${ct}"><b>📞 Llamar a ${cn}</b><span>Persona de confianza</span></a><a class="qb wa" target="_blank" href="https://wa.me/${ct}?text=${mC}"><b>💬 WhatsApp a ${cn}</b><span>Mensaje listo para enviar</span></a>`:''}${tw?`<a class="qb wa" target="_blank" href="https://wa.me/${tw}?text=${mT}"><b>💬 WhatsApp a ${tn}</b><span>Su terapeuta puede no responder de inmediato</span></a>`:''}</div>`}
+ return `<div class="qc">${ct?`<a class="qb call" href="tel:+${ct}"><b>📞 Llamar a ${cn}</b><span>Persona de confianza</span></a><a class="qb wa" target="_blank" href="https://wa.me/${ct}?text=${mC}"><b>💬 WhatsApp a ${cn}</b><span>Mensaje listo para enviar</span></a>`:`<button class="qb call" data-qcfg><b>📞 Llamar a mi persona de confianza</b><span>Toque para agregar su número en Ajustes</span></button>`}${tw?`<a class="qb wa" target="_blank" href="https://wa.me/${tw}?text=${mT}"><b>💬 WhatsApp a ${tn}</b><span>Su terapeuta puede no responder de inmediato</span></a>`:`<button class="qb wa" data-qcfg><b>💬 WhatsApp a mi terapeuta</b><span>Toque para agregar su número en Ajustes</span></button>`}</div>`}
 /* ---------- Inicio ---------- */
 function vInicio(){const d=DB.diary[today()],hasPlan=DB.plan.contactos||DB.plan.propias;const done7=[...Array(7)].filter((_,i)=>DB.diary[dshift(today(),-i)]).length;
  return `<div class="hi"><h2>Hola${DB.cfg.nombre?', '+esc(DB.cfg.nombre.split(' ')[0]):''}</h2><button class="mini" data-go="cfg">⚙ Ajustes</button></div>
@@ -962,7 +962,7 @@ function openCrisisMenu(){const P=$('#player');P.className='player on dark';
  ${Object.entries(EX).filter(([,x])=>x.crisis).map(([id,x])=>`<button class="pb ${x.red?'red':''}" data-cx="${id}"><b>${x.n}</b>${x.s}</button>`).join('')}
  <p class="small">Esta herramienta no avisa a nadie ni se revisa en tiempo real.</p></div>
  <div class="pfoot"><a href="tel:*4141">Llamar *4141</a>Línea de Prevención del Suicidio · gratuita · 24/7 · 131 SAMU</div>`;
- $('#px').onclick=closePlayer;$$('[data-cx]').forEach(b=>b.onclick=()=>startEx(b.dataset.cx))}
+ $('#px').onclick=closePlayer;$$('[data-cx]').forEach(b=>b.onclick=()=>startEx(b.dataset.cx));$$('#player [data-qcfg]').forEach(b=>b.onclick=()=>{closePlayer();UI.tab='cfg';UI.sub=null;render();scrollTo(0,0)})}
 function closePlayer(){clearInterval(PL.t);clearTimeout(PL.bt);$('#player').className='player';if(DB.act)render()}
 
 /* ================= MOTOR DE EJERCICIOS ================= */
